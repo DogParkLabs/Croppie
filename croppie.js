@@ -177,7 +177,7 @@
     /* Utilities */
     function loadImage(src, doExif) {
         if (!src) { throw 'Source image missing'; }
-        
+
         var img = new Image();
         img.style.opacity = '0';
         return new Promise(function (resolve, reject) {
@@ -1037,7 +1037,9 @@
 
         self._originalImageWidth = imgData.width;
         self._originalImageHeight = imgData.height;
-        self.data.orientation = _hasExif.call(self) ? getExifOrientation(self.elements.img) : self.data.orientation;
+        // HACK
+        // self.data.orientation = _hasExif.call(self) ? getExifOrientation(self.elements.img) : self.data.orientation;
+        self.data.orientation = self.data.orientation || getExifOrientation(self.elements.img);
 
         if (self.options.enableZoom) {
             _updateZoomLimits.call(self, true);
@@ -1310,6 +1312,8 @@
         self.data.bound = false;
         self.data.url = url || self.data.url;
         self.data.boundZoom = zoom;
+        // HACK
+        self.data.orientation = options.orientation;
 
         return loadImage(url, hasExif).then(function (img) {
             _replaceImage.call(self, img);

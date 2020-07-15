@@ -16,6 +16,16 @@
     root.Croppie = factory();
   }
 }(typeof self !== 'undefined' ? self : this, function () {
+  var HELPER_GUTTER = 40;
+  var HELPER_STYLES = {
+    'font-size': '48px',
+    'font-weight': 200,
+    'line-height': '32px',
+    color: '#040416',
+    height: '32px',
+    position: 'absolute',
+    width: '32px'
+  };
 
   /* Polyfills */
   if (typeof window !== 'undefined' && typeof window.CustomEvent !== "function") {
@@ -416,6 +426,18 @@
       addClass(self.element, self.options.customClass);
     }
 
+    ////////// Good Dog-specific helpers
+    try {
+      var helperP = document.createElement('p');
+      helperP.classList.add('CroppableOverlay__helperText', 'f3', 'mb3', 'fw-normal', 'text-black', '_remove');
+      helperP.innerText = 'Drag to reposition the photo';
+      boundary.parentNode.insertBefore(helperP, boundary.nextSibling);
+      self.elements.helperP = helperP;
+    } catch (err) {
+      window.console.error('Could not attach croppie helper text', err);
+    }
+    ////////// end Good Dog-specific helpers
+
     _initDraggable.call(this);
 
     if (self.options.enableZoom) {
@@ -451,6 +473,27 @@
 
     self.element.appendChild(wrap);
     wrap.appendChild(zoomer);
+
+    ////////// Good Dog-specific helpers
+    try {
+      var minusSpan = document.createElement('span');
+      Object.assign(minusSpan.style, HELPER_STYLES, { left: `-${HELPER_GUTTER}px`, top: '-6px' });
+      minusSpan.classList.add('_remove');
+      minusSpan.innerText = '-';
+      zoomer.parentNode.insertBefore(minusSpan, zoomer);
+      self.elements.minusSpan = minusSpan;
+
+      var plusSpan = document.createElement('span');
+      Object.assign(plusSpan.style, HELPER_STYLES, { right: `-${HELPER_GUTTER}px`, top: '-4px' });
+      plusSpan.classList.add('_remove');
+      plusSpan.innerText = '+';
+      zoomer.parentNode.appendChild(plusSpan);
+      self.elements.plusSpan = plusSpan;
+
+    } catch (e) {
+      window.console.error('Could not attach croppie zoom helper nodes', err);
+    }
+    ////////// end Good Dog-specific helpers
 
     self._currentZoom = 1;
 
@@ -1319,6 +1362,7 @@
   function _destroy() {
     var self = this;
     self.element.removeChild(self.elements.boundary);
+    self.element.removeChild(self.elements.helperP);
     removeClass(self.element, 'croppie-container');
     if (self.options.enableZoom) {
       self.element.removeChild(self.elements.zoomerWrap);

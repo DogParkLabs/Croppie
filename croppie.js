@@ -16,7 +16,7 @@
     root.Croppie = factory();
   }
 }(typeof self !== 'undefined' ? self : this, function () {
-  var HELPER_GUTTER = 40;
+  var HELPER_GUTTER = '-40px';
   var HELPER_STYLES = {
     'font-size': '48px',
     'font-weight': 200,
@@ -477,14 +477,14 @@
     ////////// Good Dog-specific helpers
     try {
       var minusSpan = document.createElement('span');
-      Object.assign(minusSpan.style, HELPER_STYLES, { left: `-${HELPER_GUTTER}px`, top: '-6px' });
+      Object.assign(minusSpan.style, HELPER_STYLES, { left: HELPER_GUTTER, top: '-6px' });
       minusSpan.classList.add('_remove');
       minusSpan.innerText = '-';
       zoomer.parentNode.insertBefore(minusSpan, zoomer);
       self.elements.minusSpan = minusSpan;
 
       var plusSpan = document.createElement('span');
-      Object.assign(plusSpan.style, HELPER_STYLES, { right: `-${HELPER_GUTTER}px`, top: '-4px' });
+      Object.assign(plusSpan.style, HELPER_STYLES, { right: HELPER_GUTTER, top: '-4px' });
       plusSpan.classList.add('_remove');
       plusSpan.innerText = '+';
       zoomer.parentNode.appendChild(plusSpan);
